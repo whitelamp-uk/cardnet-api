@@ -1,0 +1,13 @@
+{
+    "folders":
+    [
+        {
+            "path": ".",
+            "file_exclude_patterns": [".git*","*.sublime-*"]
+        },
+        {
+            "path": "../blotto",
+            "file_include_patterns": ["ddtest.bash"]
+        }
+    ]
+}
