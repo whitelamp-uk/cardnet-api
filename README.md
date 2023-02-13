@@ -8,3 +8,7 @@ A blotto2 API class for interacting with Lloyds Cardnet direct post on (at least
 Configuration should limit payments to debit card only
 
 
+# To do
+
+Create config.example.php
+
