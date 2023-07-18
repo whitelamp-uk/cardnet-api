@@ -167,6 +167,13 @@ class PayApi {
         error_log ($code.' '.$message);
     }
 
+    public function errorMessage ( ) {
+        if (array_key_exists('fail_reason',$_POST) && $_POST['fail_reason']) {
+            return $_POST['fail_reason'];
+        }
+        return '[no message]';
+    }
+
     private function execute ($sql_file) {
         $sql = $this->sql_instantiate (file_get_contents($sql_file));
         try {
@@ -233,6 +240,13 @@ class PayApi {
       <input type="text" name="<?php echo $name ?>" value="<?php echo $value; ?>" <?php if ($hide) echo 'readonly="readonly"'; ?>/>
       </p>
       <?php
+    }
+
+    public function reference ( ) {
+        if (array_key_exists('oid',$_POST) && $_POST['oid']) {
+            return CARDNET_REFNO_OFFSET + $_POST['oid'];
+        }
+        return false;
     }
 
     private function refno ($id) {
@@ -359,6 +373,10 @@ class PayApi {
             return;
         }
         require __DIR__.'/form.php';
+    }
+
+    public function success ( ) {
+        return array_key_exists('status',$_POST) && $_POST['status']=='APPROVED';
     }
 
     private function supporter_add ($payment_id) {
