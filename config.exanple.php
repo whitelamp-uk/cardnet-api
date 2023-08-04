@@ -3,6 +3,7 @@
 // cardnet-api, a Cardnet payment class
 define ( 'BLOTTO_PAY_API_CARDNET',       '/path/to/cardnet-api/PayApi.php'   );
 define ( 'BLOTTO_PAY_API_CARDNET_CLASS', '\Blotto\Cardnet\PayApi'             );
+define ( 'CARDNET_BUY',              false       ); // Allow web integration (only allow one provider)?
 define ( 'CARDNET_CMPLN_EML',        false       ); // Send completion message by email
 define ( 'CARDNET_CMPLN_MOB',        false       ); // Send completion message by SMS
 define ( 'CARDNET_CMPLN_EML_CM_ID',  ''          );
@@ -31,7 +32,6 @@ define ( 'VOODOOSMS',               '/path/to/voodoosms/SMS.class.php' );
 // Global - Cardnet
 define ( 'CARDNET_CODE',             'CDNT'      ); // CCC and Provider
 define ( 'CARDNET_DD',               false       ); // Does not offer direct debit
-define ( 'CARDNET_BUY',              true        ); // Offers web integration
 define ( 'CARDNET_TABLE_MANDATE',    'blotto_build_mandate'      );
 define ( 'CARDNET_TABLE_COLLECTION', 'blotto_build_collection'   );
 
