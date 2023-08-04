@@ -10,7 +10,8 @@ define ( 'CARDNET_CMPLN_EML_CM_ID',  ''          );
 define ( 'CARDNET_ERROR_LOG',        true        );
 define ( 'CARDNET_REFNO_OFFSET',     100000000   );
 define ( 'CARDNET_DESCRIPTION',      'My Org Lottery'                );
-define ( 'CARDNET_PRODUCT_NAME',     'ONE-OFF-LOTTERY-PAYMENT'               );
+define ( 'CARDNET_FROM',             '2001-01-01'                    ); // Ignore stuff before a certain date
+define ( 'CARDNET_PRODUCT_NAME',     'ONE-OFF-LOTTERY-PAYMENT'       );
 define ( 'CARDNET_URL',      'https://test.ipg-online.com/connect/gateway/processing' );
 define ( 'CARDNET_STORE_ID', '' );
 define ( 'CARDNET_SECRET',   '' );
