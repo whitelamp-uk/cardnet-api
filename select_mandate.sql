@@ -1,6 +1,6 @@
 -- Must be a single select query
 SELECT
-  '{{STRIPE_CODE}}'
+  '{{CARDNET_CODE}}'
  ,null
  ,`refno`
  ,`cref`
@@ -19,8 +19,8 @@ SELECT
  ,1
  ,`created`
  ,`created`
-FROM `stripe_payment`
-WHERE `created`>='{{STRIPE_FROM}}'
+FROM `cardnet_payment`
+WHERE `created`>='{{CARDNET_FROM}}'
   AND `callback_at` IS NOT NULL
 ORDER BY `id`
 ;
