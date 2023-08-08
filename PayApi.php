@@ -102,7 +102,7 @@ class PayApi {
         }
         catch (\Exception $e) {
             error_log ($e->getMessage());
-            throw new \Exception ("stripe payment_id=$payment_id, step=$step: {$e->getMessage()}");
+            throw new \Exception ("cardnet payment_id=$payment_id, step=$step: {$e->getMessage()}");
             return false;
         }
     }
