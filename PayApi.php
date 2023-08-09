@@ -115,10 +115,14 @@ class PayApi {
         $payment_id             = $_POST['oid'];
         $failure_code           = '';
         $failure_message        = '';
-        if ($_POST['status']=='FAILED') {
+        $status                 = $_POST['status'];
+        if ($status != 'APPROVED') {
             $failure_code       = $_POST['fail_rc'];
             $failure_message    = $_POST['fail_reason'];
-            error_log ("Cardnet charge failed $failure_code $failure_message");
+            error_log ("Cardnet charge status $status $failure_code $failure_message");
+            if ($failure_code == '') {
+                $failure_code = strtolower($status);
+            }
         }
 
         try {
@@ -134,7 +138,6 @@ class PayApi {
                  ,`failure_code`='{$failure_code}'
                  ,`failure_message`='{$failure_message}'
                 WHERE `id`='$payment_id'
-                LIMIT 1
               "
             );
         }
