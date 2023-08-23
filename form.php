@@ -1,5 +1,4 @@
 <?php
-$hide = true;
 //error_log(print_r($v,true));
 $values = [
   "bname" => $v['title'].' '.$v['name_first'].' '.$v['name_last'],
@@ -48,10 +47,10 @@ $values = [
               <div id="card-element">
    <?php
 
-$this->prinput("cardnumber", "4147463011110083");
-$this->prinput("expmonth", "12");
-$this->prinput("expyear", "2023 ");
-$this->prinput("cvm", "123");
+$this->prinput("cardnumber", "", "Card Number");
+$this->prinput("expmonth", "", "Expiry Month");
+$this->prinput("expyear", "", "Expiry Year");
+$this->prinput("cvm", "", "Three digit code");
 
 ?>             
 
@@ -62,9 +61,9 @@ $this->prinput("cvm", "123");
               </button>
 
 <?php foreach ($values as $name => $value) {
-  $this->prinput($name, $value, $hide);
+  $this->prinput($name, $value);
 }
-$this->prinput("hashExtended", $this->createExtendedHash($values), $hide);
+$this->prinput("hashExtended", $this->createExtendedHash($values));
 ?>
 
               </div>

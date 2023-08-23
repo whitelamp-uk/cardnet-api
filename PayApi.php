@@ -43,7 +43,7 @@ class PayApi {
         $responded          = false;
         $error              = null;
         $txn_ref            = null;
-        //error_log(__FILE__.' '.print_r($_POST, true));
+        error_log(__FILE__.' '.print_r($_POST, true));
         try {
             $step           = 0;
 
@@ -146,7 +146,7 @@ class PayApi {
             throw new \Exception ('SQL error');
             return false;
         }
-        if ($_POST['status']=='FAILED') {
+        if ($_POST['status']!='APPROVED') {
             return false;
         }
         return $payment_id;
@@ -236,11 +236,17 @@ class PayApi {
         }
     }
 
-    private function prinput($name, $value, $hide=false) {
+    private function prinput($name, $value, $label=false) {  //tidy up?
       ?>
-      <p<?php if ($hide) echo " hidden";?>>
-      <label for="<?php echo $name; ?>"><?php echo $name ?>:</label>
-      <input type="text" name="<?php echo $name ?>" value="<?php echo $value; ?>" <?php if ($hide) echo 'readonly="readonly"'; ?>/>
+      <p
+      <?php 
+      if (!$label) echo " hidden";
+      ?>
+      >
+      <?php if ($label) { ?>
+      <label for="<?php echo $name; ?>"><?php echo $label ?>:</label>
+      <?php } ?>
+      <input type="text" name="<?php echo $name ?>" value="<?php echo $value; ?>" <?php if (!$label) echo 'readonly="readonly"'; ?>/>
       </p>
       <?php
     }
