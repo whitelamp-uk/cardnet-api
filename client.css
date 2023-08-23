@@ -31,7 +31,7 @@
   background: white;
 }
 
-#payment-form input[type="button"] {
+#payment-form input[type="button"],button {
   display: inline-block;
   border-style: solid;
   border-width: 1px;
