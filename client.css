@@ -21,6 +21,7 @@
 }
 
 #payment-form fieldset {
+  border-radius: 0.3em;
   padding-bottom: 2em;
 }
 
