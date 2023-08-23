@@ -12,6 +12,7 @@
 
 #payment-form {
   width: 36em;
+  padding-left: 0.4em;
 }
 
 #payment-form > div:nth-of-type(1) {
