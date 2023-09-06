@@ -45,25 +45,47 @@ $values = [
 <legend>Card Details</legend>
 
               <div id="card-element">
-   <?php
 
-$this->prinput("cardnumber", "", "Card Number");
-$this->prinput("expmonth", "", "Expiry Month");
-$this->prinput("expyear", "", "Expiry Year");
-$this->prinput("cvm", "", "Three digit code");
+                <label for="cardnumber">Card number</label>
+                <input type="text" name="cardnumber" value="" required pattern="[0-9]{16}" title="this should be the 16-digit number on the front of the card" />
 
-?>             
+                <label for="expmonth">Expires</label>
+                <select name="expmonth" required title="expiry month is compulsory" >
+                  <option value="">Month</option>
+                  <option value="01">01</option>
+                  <option value="02">02</option>
+                  <option value="03">03</option>
+                  <option value="04">04</option>
+                  <option value="05">05</option>
+                  <option value="06">06</option>
+                  <option value="07">07</option>
+                  <option value="08">08</option>
+                  <option value="09">09</option>
+                  <option value="10">10</option>
+                  <option value="11">11</option>
+                  <option value="12">12</option>
+                </select>
+                <select name="expyear" required title="expiry year is compulsory" >
+                  <option value="">Year</option>
+<?php $yr = date ('Y'); ?>
+<?php for ($i=$yr;$i<($yr+6);$i++): ?>
+                  <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+<?php endfor; ?>
+                </select>
 
+                <label for="cvm">Three-digit code</label>
+                <input type="text" name="cvm" value="" required pattern="[0-9]{3}" title="this should be the 3-digit CVM number on the back of the card" />
 
-              <button id="submit">
-                <div class="spinner hidden" id="spinner"></div>
-                <span id="button-text">Pay now</span>
-              </button>
+                <button id="submit">
+                  <div class="spinner hidden" id="spinner"></div>
+                  <span id="button-text">Pay now</span>
+                </button>
 
-<?php foreach ($values as $name => $value) {
-  $this->prinput($name, $value);
+<?php
+foreach ($values as $name => $value) {
+    $this->prinput ($name,$value);
 }
-$this->prinput("hashExtended", $this->createExtendedHash($values));
+$this->prinput ("hashExtended",$this->createExtendedHash($values));
 ?>
 
               </div>

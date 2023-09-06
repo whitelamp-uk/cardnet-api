@@ -66,3 +66,28 @@
   display: none;
 }
 
+#payment-form select {
+  margin-top: 0.5em;
+  margin-bottom: 6px;
+  border-radius: 6px;
+  border-width: 1px;
+  border-color: rgb(0,0,0) rgb(0,0,0) rgb(0,0,0) rgb(0,0,0);
+  padding: 0.6em;
+}
+
+#payment-form input[name="cvm"] {
+  margin-right: 0;
+  width: 4.6em;
+}
+
+#payment-form label {
+  display: block;
+  margin-top: 0.8em;
+}
+
+#payment-form button {
+  border-radius: 6px;
+  padding: 0.4em 0.8em 0.4em 0.8em;
+  cursor: pointer;
+}
+
