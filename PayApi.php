@@ -118,7 +118,15 @@ class PayApi {
         $status                 = $_POST['status'];
         if ($status != 'APPROVED') {
             $failure_code       = $_POST['fail_rc'];
-            $failure_message    = $_POST['fail_reason'];
+            $failure_message    = ucfirst(strtolower($_POST['status'])).': ';
+            $failure_message   .= $_POST['fail_reason'];
+            if (!empty($_POST['fail_reason_details'])) {
+                $failure_message   .= ' '.$_POST['fail_reason_details'];
+            }
+            if (!empty($_POST['ipgTransactionId'])) {
+                $failure_message   .= ' ipgid: '.$_POST['ipgTransactionId'];
+            }
+
             error_log ("Cardnet charge status $status $failure_code $failure_message");
             if ($failure_code == '') {
                 $failure_code = strtolower($status);
@@ -133,7 +141,7 @@ class PayApi {
                 UPDATE `cardnet_payment`
                 SET
                   `callback_at`=NOW()
-                 ,`refno`={$this->refno($payment_id)}
+                  ,`refno`={$this->refno($payment_id)}
                  ,`cref`='{$this->cref($payment_id)}'
                  ,`failure_code`='{$failure_code}'
                  ,`failure_message`='{$failure_message}'
@@ -171,10 +179,32 @@ class PayApi {
     }
 
     public function errorMessage ( ) {
-        if (array_key_exists('fail_reason',$_POST) && $_POST['fail_reason']) {
-            return $_POST['fail_reason'];
+        if ($_POST['status'] == 'APPROVED') {
+            $msg =  '[no message]';
         }
-        return '[no message]';
+        elseif ($_POST['status'] == 'DECLINED') {
+            if (!empty($_POST['fail_reason'])) {
+                $msg = ucfirst(strtolower($_POST['fail_reason']));
+            } else {
+                $msg = 'Declined';
+            }
+        }
+        else { // FAILED or possibly WAITING?
+            if (strpos($_POST['fail_reason_details'], 'Transaction cannot be processed') !== false) {
+                $msg = 'It could not be processed.';
+            }
+            elseif  (strpos($_POST['fail_reason_details'], 'Brand type is not supported') !== false) {
+                $msg = 'This type or brand of card is not supported. Remember we cannot accept credit cards.';
+            }
+            elseif (!empty($_POST['fail_reason_details'])) {
+                $msg = $_POST['fail_reason_details'];
+            } elseif (!empty($_POST['fail_reason'])) {
+                $msg = $_POST['fail_reason'];
+            } else {
+                $msg = 'It could not be processed.';   
+            }
+        }
+        return $msg;
     }
 
     private function execute ($sql_file) {
