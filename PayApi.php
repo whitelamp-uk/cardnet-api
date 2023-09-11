@@ -178,6 +178,12 @@ class PayApi {
         error_log ($code.' '.$message);
     }
 
+    // Cardnet documentation seems to have very little info - fail_reason_details is not even mentioned!
+    // So we have had to work from actual responses.  In the case of "DECLINED" it looks like "details"
+    // is not populated and fail_reason is upper case - e.g. RESTRICTED CARD. If FAILED fail_reason
+    // is often the useless "Request does not match merchant configuration", so we use "details", if
+    // available. Two that need translating are "Brand type is not supported" and"No values sent for 
+    // FullByPass. Transaction cannot be processed."
     public function errorMessage ( ) {
         if ($_POST['status'] == 'APPROVED') {
             $msg =  '[no message]';
