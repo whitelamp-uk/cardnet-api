@@ -184,30 +184,31 @@ class PayApi {
     // is often the useless "Request does not match merchant configuration", so we use "details", if
     // available. Two that need translating are "Brand type is not supported" and"No values sent for 
     // FullByPass. Transaction cannot be processed."
+    // Management decision was made to not expose any reason for a card being declined - these are now
+    // logged as errors in case we need it for customer support
     public function errorMessage ( ) {
         if ($_POST['status'] == 'APPROVED') {
             $msg =  '[no message]';
         }
         elseif ($_POST['status'] == 'DECLINED') {
             if (!empty($_POST['fail_reason'])) {
-                $msg = ucfirst(strtolower($_POST['fail_reason']));
-            } else {
-                $msg = 'Declined';
+                error_log ('Cardnet declined:');
+                error_log (print_r($_POST,true));
             }
+            $msg = 'The card was declined';
         }
         else { // FAILED or possibly WAITING?
-            if (strpos($_POST['fail_reason_details'], 'Transaction cannot be processed') !== false) {
-                $msg = 'It could not be processed.';
+            $msg = 'It could not be processed.';   
+            if  (strpos($_POST['fail_reason_details'], 'Brand type is not supported') !== false) {
+                $msg = 'This type or brand of card is not supported. Please remember we cannot accept credit cards.';
             }
-            elseif  (strpos($_POST['fail_reason_details'], 'Brand type is not supported') !== false) {
-                $msg = 'This type or brand of card is not supported. Remember we cannot accept credit cards.';
-            }
+            // The current assumption is naughty people posting "experimental" details can gain no clues here
+            // Thus we can be transparent about the internal message ie use it as the customer message
             elseif (!empty($_POST['fail_reason_details'])) {
                 $msg = $_POST['fail_reason_details'];
-            } elseif (!empty($_POST['fail_reason'])) {
+            }
+            elseif (!empty($_POST['fail_reason'])) {
                 $msg = $_POST['fail_reason'];
-            } else {
-                $msg = 'It could not be processed.';   
             }
         }
         return $msg;
