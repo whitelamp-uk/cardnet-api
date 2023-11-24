@@ -1,5 +1,15 @@
 <?php
 //error_log(print_r($v,true));
+
+$cardnet_response = CARDNET_RESPONSE;
+if ($_GET['d']) {
+  if (strpos($cardnet_response, '?')) {
+    $cardnet_response .= "&d=".$_GET['d'];
+  } else {
+    $cardnet_response .= "?d=".$_GET['d'];
+  }
+}
+
 $values = [
   "bname" => $v['title'].' '.$v['name_first'].' '.$v['name_last'],
   "chargetotal" => $pounds_amount,
@@ -11,8 +21,8 @@ $values = [
   "txndatetime" => date("Y:m:d-H:i:s"),
   "hash_algorithm" => "HMACSHA256",
   "checkoutoption" => "combinedpage",
-  "responseSuccessURL" => CARDNET_RESPONSE,
-  "responseFailURL" => CARDNET_RESPONSE,
+  "responseSuccessURL" => $cardnet_response,
+  "responseFailURL" => $cardnet_response,
   "transactionNotificationURL" => CARDNET_CALLBACK,
   "cardFunction" => "debit",
   "full_bypass" => "true",
@@ -32,6 +42,8 @@ $values = [
                 <tr><td>A: Payment succeeds</td><td>4147463011110083</td></tr>
                 <tr><td>B: Payment requires authentication</td><td>4099000000001960 ??</td></tr>
                 <tr><td>C: Payment is declined</td><td>4265880000000056 ?</td></tr>
+                <tr><td>cardnet_response</td><td><?php echo $cardnet_response; ?></td></tr>
+
               </table>
 <?php endif; ?>
               <div>
