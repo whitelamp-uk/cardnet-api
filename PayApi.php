@@ -16,6 +16,7 @@ class PayApi {
                  'CARDNET_URL',
                  'CARDNET_STORE_ID',
                  'CARDNET_SECRET',
+                 'CARDNET_PARENT_URI',
              ];
     public   $database;
     public   $diagnostic;

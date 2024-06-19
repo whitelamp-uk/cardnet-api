@@ -26,6 +26,7 @@ $values = [
   "transactionNotificationURL" => CARDNET_CALLBACK,
   "cardFunction" => "debit",
   "full_bypass" => "true",
+  "parentUri" => CARDNET_PARENT_URI,
 ];
 
 ?>
