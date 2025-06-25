@@ -1,7 +1,11 @@
 <?php
+$isTicketsc = !empty($v['useTicketsc']) && $v['useTicketsc'] === "true";
+//error_log('isTicketsc: ' . ($isTicketsc ? 'true' : 'false'));
+
 //error_log(print_r($v,true));
 
-$cardnet_response = CARDNET_RESPONSE;
+$cardnet_response = $isTicketsc ? CARDNET_RESPONSE_TICKETSC : CARDNET_RESPONSE;
+//$cardnet_response = CARDNET_RESPONSE;
 if ($_GET['d']) {
   if (strpos($cardnet_response, '?')) {
     $cardnet_response .= "&d=".$_GET['d'];
@@ -26,7 +30,7 @@ $values = [
   "transactionNotificationURL" => CARDNET_CALLBACK,
   "cardFunction" => "debit",
   "full_bypass" => "true",
-  "parentUri" => CARDNET_PARENT_URI,
+  "parentUri" => $isTicketsc ? CARDNET_PARENT_URI_TICKETSC : CARDNET_PARENT_URI,	//CARDNET_PARENT_URI,
 ];
 
 ?>

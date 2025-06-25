@@ -356,6 +356,7 @@ class PayApi {
 
     public function start (&$err) {
         $v = www_signup_vars ();
+        //error_log("TEST: " . json_encode($v, JSON_PRETTY_PRINT));    // dave
         $today = date ('Y-m-d');
         if ($v['collection_date']) {
             $dt = new \DateTime ($v['collection_date']);
@@ -404,6 +405,76 @@ class PayApi {
            ,`county`='{$v['county']}'
            ,`gdpr`='{$v['gdpr']}'
            ,`terms`='{$v['terms']}'
+           ,`pref_email`='{$v['pref_email']}'
+           ,`pref_sms`='{$v['pref_sms']}'
+           ,`pref_post`='{$v['pref_post']}'
+           ,`pref_phone`='{$v['pref_phone']}'
+          ;
+        ";
+        try {
+            $this->connection->query ($sql);
+            $newid = $this->connection->insert_id;
+        }
+        catch (\mysqli_sql_exception $e) {
+            $this->error_log (121,'SQL insert failed: '.$e->getMessage());
+            $err[] = 'Sorry something went wrong - please try later';
+            return;
+        }
+        require __DIR__.'/form.php';
+    }
+
+     public function start_c (&$err) {
+        $v = www_signup_vars ();
+        //error_log("TEST: " . json_encode($v, JSON_PRETTY_PRINT));    // dave
+        $today = date ('Y-m-d');
+        if ($v['collection_date']) {
+            $dt = new \DateTime ($v['collection_date']);
+            if (defined('BLOTTO_INSURE_DAYS') && BLOTTO_INSURE_DAYS>0) {
+                $dt->sub (new \DateInterval('P'.BLOTTO_INSURE_DAYS.'D'));
+            }
+            $dt = $dt->format ('Y-m-d');
+            if ($dt<$today) {
+                $v['collection_date'] = $today;
+            }
+            else {
+                $v['collection_date'] = $dt;
+            }
+        }
+        else {
+            $v['collection_date'] = $today;
+        }
+        foreach ($v as $key => $val) {
+            if (preg_match('<^pref_>',$key)) {
+                $v[$key] = yes_or_no ($val,'Y','N');
+                continue;
+            }
+            $v[$key] = $this->connection->real_escape_string ($val);
+        }
+        $amount = intval($v['quantity']) * intval($v['draws']) * BLOTTO_TICKET_PRICE;
+        $pounds_amount = number_format ($amount/100,2,'.','');
+        $sql = "
+          INSERT INTO `cardnet_payment`
+          SET
+            `collection_date`='{$v['collection_date']}'
+           ,`quantity`='{$v['quantity']}'
+           ,`draws`='{$v['draws']}'
+           ,`amount`='{$pounds_amount}'
+           ,`title`='{$v['title']}'
+           ,`name_first`='{$v['name_first']}'
+           ,`name_last`='{$v['name_last']}'
+           ,`dob`='{$v['dob']}'
+           ,`email`='{$v['email']}'
+           ,`mobile`='{$v['mobile']}'
+           ,`telephone`='{$v['telephone']}'
+           ,`postcode`='{$v['postcode']}'
+           ,`address_1`='{$v['address_1']}'
+           ,`address_2`='{$v['address_2']}'
+           ,`address_3`='{$v['address_3']}'
+           ,`town`='{$v['town']}'
+           ,`county`='{$v['county']}'
+           ,`gdpr`='{$v['gdpr']}'
+           ,`terms`='{$v['terms']}'
+           ,`pref_1`='{$v['pref_1']}'
            ,`pref_email`='{$v['pref_email']}'
            ,`pref_sms`='{$v['pref_sms']}'
            ,`pref_post`='{$v['pref_post']}'
