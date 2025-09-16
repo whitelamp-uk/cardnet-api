@@ -6,6 +6,7 @@ SELECT
  ,`refno`
  ,`cref`
  ,`amount`
+ ,'Paid'
 FROM `cardnet_payment`
 WHERE `created`>='{{CARDNET_FROM}}'
   AND `callback_at` IS NOT NULL
