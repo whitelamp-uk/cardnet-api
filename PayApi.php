@@ -1,5 +1,5 @@
 <?php
-
+// This won't work unless "enabled the hashExtended calculation without card details, which is required when using full bypass mode."
 namespace Blotto\Cardnet;
 
 class PayApi {
@@ -103,7 +103,7 @@ class PayApi {
         }
         catch (\Exception $e) {
             error_log ($e->getMessage());
-            throw new \Exception ("cardnet payment_id=$payment_id, step=$step: {$e->getMessage()}");
+            throw new \Exception ($this->org['org_code']." cardnet payment_id=$payment_id, step=$step: {$e->getMessage()}");
             return false;
         }
     }
@@ -200,13 +200,14 @@ class PayApi {
         }
         else { // FAILED or possibly WAITING?
             $msg = 'It could not be processed.';   
-            if  (strpos($_POST['fail_reason_details'], 'Brand type is not supported') !== false) {
-                $msg = 'This type or brand of card is not supported. Please remember we cannot accept credit cards.';
-            }
             // The current assumption is naughty people posting "experimental" details can gain no clues here
             // Thus we can be transparent about the internal message ie use it as the customer message
-            elseif (!empty($_POST['fail_reason_details'])) {
-                $msg = $_POST['fail_reason_details'];
+            if (!empty($_POST['fail_reason_details'])) {
+                if  (strpos($_POST['fail_reason_details'], 'Brand type is not supported') !== false) {
+                    $msg = 'This type or brand of card is not supported. Please remember we cannot accept credit cards.';
+                } else {
+                    $msg = $_POST['fail_reason_details'];
+                }
             }
             elseif (!empty($_POST['fail_reason'])) {
                 $msg = $_POST['fail_reason'];
