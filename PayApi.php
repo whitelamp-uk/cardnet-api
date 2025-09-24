@@ -447,12 +447,15 @@ class PayApi {
         foreach ($v as $key => $val) {
             if (preg_match('<^pref_>',$key)) {
                 $v[$key] = yes_or_no ($val,'Y','N');
-                continue;
+            } else {
+                $v[$key] = $this->connection->real_escape_string ($val);
             }
-            $v[$key] = $this->connection->real_escape_string ($val);
         }
         $amount = intval($v['quantity']) * intval($v['draws']) * BLOTTO_TICKET_PRICE;
         $pounds_amount = number_format ($amount/100,2,'.','');
+        if (!isset($v['pref_1'])) {
+            $v['pref_1'] = '';  // suppress PHP notice
+        }
         $sql = "
           INSERT INTO `cardnet_payment`
           SET
