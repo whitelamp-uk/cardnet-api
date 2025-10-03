@@ -188,17 +188,18 @@ class PayApi {
     // Management decision was made to not expose any reason for a card being declined - these are now
     // logged as errors in case we need it for customer support
     public function errorMessage ( ) {
-        if ($_POST['status'] == 'APPROVED') {
+        if (isset($_POST['status']) && $_POST['status'] == 'APPROVED') {
             $msg =  '[no message]';
         }
-        elseif ($_POST['status'] == 'DECLINED') {
+        elseif (isset($_POST['status']) && $_POST['status'] == 'DECLINED') {
             if (!empty($_POST['fail_reason'])) {
-                error_log ('Cardnet declined:');
-                error_log (print_r($_POST,true));
+                error_log ('Cardnet declined');
+                error_log (__FILE__.' '.__LINE__.' '.print_r($_POST,true));
             }
             $msg = 'The card was declined';
         }
         else { // FAILED or possibly WAITING?
+            error_log (__FILE__.' '.__LINE__.' '.print_r($_POST,true));
             $msg = 'It could not be processed.';   
             // The current assumption is naughty people posting "experimental" details can gain no clues here
             // Thus we can be transparent about the internal message ie use it as the customer message
