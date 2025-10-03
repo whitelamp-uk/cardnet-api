@@ -118,7 +118,7 @@ class PayApi {
         $failure_message        = '';
         $status                 = $_POST['status'];
         if ($status != 'APPROVED') {
-            $failure_code       = $_POST['fail_rc'];
+            $failure_code       = $_POST['fail_rc'] ?? 'none given';
             $failure_message    = ucfirst(strtolower($_POST['status'])).': ';
             $failure_message   .= $_POST['fail_reason'];
             if (!empty($_POST['fail_reason_details'])) {
