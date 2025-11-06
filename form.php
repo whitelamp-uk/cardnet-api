@@ -6,7 +6,7 @@ $isTicketsc = !empty($v['useTicketsc']) && $v['useTicketsc'] === "true";
 
 $cardnet_response = $isTicketsc ? CARDNET_RESPONSE_TICKETSC : CARDNET_RESPONSE;
 //$cardnet_response = CARDNET_RESPONSE;
-if ($_GET['d']) {
+if (!empty($_GET['d'])) {
   if (strpos($cardnet_response, '?')) {
     $cardnet_response .= "&d=".$_GET['d'];
   } else {
