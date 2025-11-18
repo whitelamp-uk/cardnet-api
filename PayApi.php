@@ -502,6 +502,28 @@ class PayApi {
         return array_key_exists('status',$_POST) && $_POST['status']=='APPROVED';
     }
 
+    public function summary ( ) {
+        try {
+            $collections = $this->connection->query (
+              "
+                SELECT
+                  `collection_date` AS `draw_closed`
+                 ,SUM(`callback_at` IS NOT NULL AND `failure_code`='') AS `supporters`
+                 ,SUM((`callback_at` IS NOT NULL AND `failure_code`='')*`quantity`) AS `tickets`
+                 ,SUM((`callback_at` IS NOT NULL AND `failure_code`='')*`amount`) AS `amount`
+                FROM `cardnet_payment`
+                GROUP BY `draw_closed`
+              "
+            );
+            return $collections->fetch_all (MYSQLI_ASSOC);
+        }
+        catch (\mysqli_sql_exception $e) {
+            $this->error_log (116,'SQL select failed: '.$e->getMessage());
+            throw new \Exception ('SQL error');
+            return false;
+        }
+    }
+
     private function supporter_add ($payment_id) {
         try {
             $s = $this->connection->query (
