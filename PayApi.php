@@ -291,6 +291,31 @@ class PayApi {
       <?php
     }
 
+    public function queued ($date) {
+        try {
+            $cs = $this->connection->query (
+              "
+                SELECT
+                  COUNT(`p`.`id`) AS `supporters`
+                 ,IFNULL(SUM(`p`.`quantity`),0) AS `tickets`
+                 ,IFNULL(SUM(`p`.`amount`),0) AS `amount`
+                FROM `cardnet_payment` AS `p`
+                LEFT JOIN `blotto_build_collection` AS `c`
+                       ON `c`.`ClientRef`=`p`.`cref`
+                WHERE `p`.`callback_at` IS NOT NULL
+                  AND `p`.`failure_code`=''
+                  AND `p`.`collection_date`>'$date'
+              "
+            );
+            return $cs->fetch_all (MYSQLI_ASSOC);
+        }
+        catch (\mysqli_sql_exception $e) {
+            $this->error_log (116,'SQL select failed: '.$e->getMessage());
+            throw new \Exception ('SQL error');
+            return false;
+        }
+    }
+
     public function reference ( ) {
         if (array_key_exists('oid',$_POST) && $_POST['oid']) {
             return CARDNET_REFNO_OFFSET + $_POST['oid'];
@@ -500,28 +525,6 @@ class PayApi {
 
     public function success ( ) {
         return array_key_exists('status',$_POST) && $_POST['status']=='APPROVED';
-    }
-
-    public function summary ( ) {
-        try {
-            $collections = $this->connection->query (
-              "
-                SELECT
-                  `collection_date` AS `draw_closed`
-                 ,SUM(`callback_at` IS NOT NULL AND `failure_code`='') AS `supporters`
-                 ,SUM((`callback_at` IS NOT NULL AND `failure_code`='')*`quantity`) AS `tickets`
-                 ,SUM((`callback_at` IS NOT NULL AND `failure_code`='')*`amount`) AS `amount`
-                FROM `cardnet_payment`
-                GROUP BY `draw_closed`
-              "
-            );
-            return $collections->fetch_all (MYSQLI_ASSOC);
-        }
-        catch (\mysqli_sql_exception $e) {
-            $this->error_log (116,'SQL select failed: '.$e->getMessage());
-            throw new \Exception ('SQL error');
-            return false;
-        }
     }
 
     private function supporter_add ($payment_id) {
