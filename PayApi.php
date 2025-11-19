@@ -307,7 +307,7 @@ class PayApi {
                   AND `p`.`collection_date`>'$date'
               "
             );
-            return $cs->fetch_all (MYSQLI_ASSOC);
+            return $cs->fetch_all (MYSQLI_ASSOC) [0];
         }
         catch (\mysqli_sql_exception $e) {
             $this->error_log (116,'SQL select failed: '.$e->getMessage());
