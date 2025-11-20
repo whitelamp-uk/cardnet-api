@@ -276,19 +276,15 @@ class PayApi {
         }
     }
 
-    private function prinput($name, $value, $label=false) {  //tidy up?
-      ?>
-      <p
-      <?php 
-      if (!$label) echo " hidden";
-      ?>
-      >
-      <?php if ($label) { ?>
-      <label for="<?php echo $name; ?>"><?php echo $label ?>:</label>
-      <?php } ?>
-      <input type="text" name="<?php echo $name ?>" value="<?php echo $value; ?>" <?php if (!$label) echo 'readonly="readonly"'; ?>/>
-      </p>
-      <?php
+    private function prinput ($name,$value,$label=false,$output=true) {
+        ob_start ();
+        require __DIR__.'/input.php';
+        $input = ob_get_contents ();
+        ob_end_clean ();
+        if ($output) {
+            echo $input;
+        }
+        return $input;
     }
 
     public function queued ($date) {
